@@ -11,14 +11,10 @@ export const styles = StyleSheet.create({
   formWrapper: {
     backgroundColor: '#fff',
     width: '100%',
-    height: 550,
+    height: 549,
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
     position: 'relative',
-    // alignItems: 'center'
-  },
-  form: {
-    
   },
   avatar: {   height: 120,
     width: 120,
