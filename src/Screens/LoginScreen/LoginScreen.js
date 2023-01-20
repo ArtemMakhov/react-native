@@ -9,10 +9,11 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
+  Button
 } from 'react-native';
 import { styles } from './StyledLoginScreen';
 
-const bgImage = require('../../assets/PhotoBG.jpg');
+const bgImage = require('../../../assets/PhotoBG.jpg');
 
 const initialState = {
   email: '',
@@ -20,7 +21,7 @@ const initialState = {
 };
 
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [passwordIsHidden, setPasswordIsHidden] = useState(true);
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -49,7 +50,7 @@ const LoginScreen = () => {
       <TouchableWithoutFeedback onPress={keyboardHide}>
         <View style={{
           ...styles.container,
-          marginBottom: isShowKeyboard ? 40 : 0
+          marginBottom: isShowKeyboard ? 10 : 0
         }}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -60,8 +61,8 @@ const LoginScreen = () => {
                   style={{
                     ...styles.input,
                     backgroundColor: isInputFocused ? "#ffffff" : "#F6F6F6",
-                      borderColor: isInputFocused ? "#FF6C00" : "#E8E8E8",
-                      color: "#212121",
+                    borderColor: isInputFocused ? "#FF6C00" : "#E8E8E8",
+                    color: "#212121",
                   }}
                   placeholder='Адрес электронной почты'
                   onFocus={handleOnFocus}
@@ -73,8 +74,8 @@ const LoginScreen = () => {
                   style={{
                     ...styles.input,
                     backgroundColor: isInputFocused ? "#ffffff" : "#F6F6F6",
-                      borderColor: isInputFocused ? "#FF6C00" : "#E8E8E8",
-                      color: "#212121",
+                    borderColor: isInputFocused ? "#FF6C00" : "#E8E8E8",
+                    color: "#212121",
                   }}
                   placeholder='Пароль'
                   secureTextEntry={true}
@@ -99,8 +100,12 @@ const LoginScreen = () => {
                 onPress={keyboardHide}>
                 <Text style={styles.submitBtnText}>Войти</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.navBtn} activeOpacity={0.8}>
-                <Text style={styles.navBtnText}>Уже есть аккаунт? Войти</Text>
+              <TouchableOpacity
+                style={styles.navBtn}
+                activeOpacity={0.8}
+                onPress={() => navigation.navigate('Register')}
+              >
+                <Text style={styles.navBtnText}>Нет аккаунта? Зарегистрироваться</Text>
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>

@@ -10,11 +10,12 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
+  Button
 } from 'react-native';
 import { styles } from './StyledRegistrationScreen';
 
-const bgImage = require('../../assets/PhotoBG.jpg');
-const addIcon = require('../../assets/add.png');
+const bgImage = require('../../../assets/PhotoBG.jpg');
+const addIcon = require('../../../assets/add.png');
 
 const initialState = {
   login: '',
@@ -22,7 +23,7 @@ const initialState = {
   password: '',
 };
 
-const RegistrationScreen = () => {
+const RegistrationScreen = ({navigation}) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [passwordIsHidden, setPasswordIsHidden] = useState(true);
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -51,7 +52,7 @@ const RegistrationScreen = () => {
       <TouchableWithoutFeedback onPress={keyboardHide}>
         <View style={{
           ...styles.container,
-          marginBottom: isShowKeyboard ? 70 : 0
+          marginBottom: isShowKeyboard ? 40 : 0
         }}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -117,7 +118,11 @@ const RegistrationScreen = () => {
                 onPress={keyboardHide}>
                 <Text style={styles.submitBtnText}>Зарегистрироваться</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.navBtn} activeOpacity={0.8}>
+              <TouchableOpacity
+                style={styles.navBtn}
+                activeOpacity={0.8}
+                onPress={() => navigation.navigate('Login')}
+              >
                 <Text style={styles.navBtnText}>Уже есть аккаунт? Войти</Text>
               </TouchableOpacity>
             </View>
