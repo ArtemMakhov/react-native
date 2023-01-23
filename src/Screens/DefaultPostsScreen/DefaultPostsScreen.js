@@ -1,18 +1,16 @@
 import { useState, useEffect } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { View, Text, StyleSheet,FlatList,Image , Button} from 'react-native';
+import { View, Text, StyleSheet,FlatList,Image} from 'react-native';
 
 const DefaultPostsScreen = ({ route, navigation }) => {
   const [posts, setPosts] = useState([]);
-  console.log('route.params', route.params);
 
   useEffect(() => {
     if (route.params) {
       setPosts(prevState => [...prevState, route.params]);
     }
   }, [route.params]);
-  console.log('posts', posts)
-  
+ 
   return (
     <View style={styles.container}>
       <FlatList data={posts}
@@ -51,7 +49,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    // alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
     borderTopColor: '#E5E5E5',
