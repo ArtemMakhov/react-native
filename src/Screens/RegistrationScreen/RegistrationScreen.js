@@ -10,7 +10,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
-  Button
 } from 'react-native';
 import { styles } from './StyledRegistrationScreen';
 
