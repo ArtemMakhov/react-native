@@ -2,14 +2,21 @@ import { useState, useEffect } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { View, Text, StyleSheet,FlatList,Image} from 'react-native';
 
+import { db } from '../../../firebase/config';
+import { onSnapshot ,collection} from "firebase/firestore";
+
 const DefaultPostsScreen = ({ route, navigation }) => {
   const [posts, setPosts] = useState([]);
 
+  const getAllPosts = async () => {
+    onSnapshot(collection(db, 'posts'), (data) => setPosts(
+      data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+    ))
+  };
+
   useEffect(() => {
-    if (route.params) {
-      setPosts(prevState => [...prevState, route.params]);
-    }
-  }, [route.params]);
+    getAllPosts();
+  }, []);
  
   return (
     <View style={styles.container}>
@@ -26,16 +33,16 @@ const DefaultPostsScreen = ({ route, navigation }) => {
                 name="comment"
                 size={24}
                 color="#BDBDBD"
-                onPress={() => navigation.navigate('Comments')}
+                onPress={() => navigation.navigate('Comments',{postId: item.id})}
               />
               <FontAwesome5
                 style={styles.markerIcon}
                 name="map-marker-alt"
                 size={24}
                 color="#BDBDBD"
-                onPress={() => navigation.navigate('Map')}
+                onPress={() => navigation.navigate('Map',{location: item.location})}
               />
-              <Text style={styles.locationText}>{item.location}, {item.country}</Text>
+              <Text style={styles.locationText}></Text>
             </View>
             
           </View>

@@ -12,6 +12,8 @@ import {
   Button
 } from 'react-native';
 import { styles } from './StyledLoginScreen';
+import { useDispatch } from 'react-redux';
+import { authSignInUser} from '../../../redux/auth/authOperations';
 
 const bgImage = require('../../../assets/PhotoBG.jpg');
 
@@ -27,12 +29,19 @@ const LoginScreen = ({navigation}) => {
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [state, setState] = useState(initialState);
   
+  const dispatch = useDispatch();
+
+  const handleSubmit = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+   
+    dispatch(authSignInUser(state));
+    setState(initialState);
+  }
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
-    console.log(state);
-    setState(initialState);
   }
 
   const handleOnFocus = () => {
@@ -78,7 +87,7 @@ const LoginScreen = ({navigation}) => {
                     color: "#212121",
                   }}
                   placeholder='Пароль'
-                  secureTextEntry={true}
+                  secureTextEntry={passwordIsHidden ? true : false}
                   onFocus={handleOnFocus}
                   onBlur={handleOnBlur}
                   value={state.password}
@@ -97,7 +106,7 @@ const LoginScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.submitBtn}
                 activeOpacity={0.8}
-                onPress={keyboardHide}>
+                onPress={handleSubmit}>
                 <Text style={styles.submitBtnText}>Войти</Text>
               </TouchableOpacity>
               <TouchableOpacity

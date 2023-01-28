@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -15,6 +16,13 @@ import {
 } from 'react-native';
 import { Camera  } from 'expo-camera';
 import * as Location from 'expo-location';
+import { storage ,db} from '../../../firebase/config';
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from 'firebase/storage';
+import { collection, addDoc } from "firebase/firestore"; 
 
 
 const CreatePostsScreen = ({ navigation }) => {
@@ -23,20 +31,28 @@ const CreatePostsScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState(null);
   const [title, setTitle] = useState('');
   const [location, setLocation] = useState(null);
-  const [country, setCountry] = useState(null);
+
+  const { userId, nickname} = useSelector((state) => state.auth);
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
   }
 
+    useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestBackgroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+      }
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+    }, []);
+  
   const takePhoto = async () => {
-    const photo = await camera.takePictureAsync();
-    let location = await Location.getCurrentPositionAsync({});
-    let address = await Location.reverseGeocodeAsync(location.coords);
-    setLocation(address[0].region);
-    setCountry(address[0].country);
-    setPhoto(photo.uri);  
+    const {uri} = await camera.takePictureAsync();
+    setPhoto(uri);  
   };
 
     const handleOnFocus = () => {
@@ -44,10 +60,36 @@ const CreatePostsScreen = ({ navigation }) => {
   };
 
   const sendPhoto = () => {
-    navigation.navigate('DefaultScreen', { photo, title, location, country });
-    setPhoto(null);
-  }
+    uploadPostToServer();
+    navigation.navigate('DefaultScreen');
+  };
 
+  const uploadPostToServer = async () => {
+    const photo = await uploadPhotoToServer()
+    await addDoc(collection(db, 'posts'),
+      {
+        photo,
+        title,
+        location: location.coords,
+        userId,
+        nickname
+      }); 
+  };
+
+  const uploadPhotoToServer = async () => {
+    const response = await fetch(photo);
+    const file = await response.blob();
+
+    const uniquePostId = Date.now().toString();
+
+    const storageRef = await ref(storage, `postImage/${uniquePostId}`);
+
+    await uploadBytes(storageRef, file);
+    const processedPhoto = await getDownloadURL(storageRef, file);
+    
+    return processedPhoto;
+   ;
+  }
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>

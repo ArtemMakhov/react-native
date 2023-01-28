@@ -1,4 +1,5 @@
-import {useState } from 'react';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   View,
   Text,
@@ -11,13 +12,15 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { authSignUpUser} from '../../../redux/auth/authOperations';
 import { styles } from './StyledRegistrationScreen';
+
 
 const bgImage = require('../../../assets/PhotoBG.jpg');
 const addIcon = require('../../../assets/add.png');
 
 const initialState = {
-  login: '',
+  nickname: '',
   email: '',
   password: '',
 };
@@ -27,13 +30,20 @@ const RegistrationScreen = ({navigation}) => {
   const [passwordIsHidden, setPasswordIsHidden] = useState(true);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [state, setState] = useState(initialState);
-  
+
+  const dispatch = useDispatch();
+
+  const handleSubmit = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+ 
+    dispatch(authSignUpUser(state))
+    setState(initialState);
+  }
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
-    console.log(state);
-    setState(initialState);
   }
 
   const handleOnFocus = () => {
@@ -71,8 +81,8 @@ const RegistrationScreen = ({navigation}) => {
                   placeholder='Логин'
                   onFocus={handleOnFocus}
                   onBlur={handleOnBlur}
-                  value={state.login}
-                  onChangeText={(value) => setState((prevState) => ({ ...prevState, login: value }))}
+                  value={state.nickname}
+                  onChangeText={(value) => setState((prevState) => ({ ...prevState, nickname: value }))}
                 />
                 <TextInput
                   style={{
@@ -95,7 +105,7 @@ const RegistrationScreen = ({navigation}) => {
                       color: "#212121",
                   }}
                   placeholder='Пароль'
-                  secureTextEntry={true}
+                  secureTextEntry={passwordIsHidden ? true : false}
                   onFocus={handleOnFocus}
                   onBlur={handleOnBlur}
                   value={state.password}
@@ -114,7 +124,7 @@ const RegistrationScreen = ({navigation}) => {
               <TouchableOpacity
                 style={styles.submitBtn}
                 activeOpacity={0.8}
-                onPress={keyboardHide}>
+                onPress={handleSubmit}>
                 <Text style={styles.submitBtnText}>Зарегистрироваться</Text>
               </TouchableOpacity>
               <TouchableOpacity
