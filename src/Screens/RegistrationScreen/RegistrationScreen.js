@@ -12,8 +12,11 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
 } from 'react-native';
+
 import { authSignUpUser} from '../../../redux/auth/authOperations';
 import { styles } from './StyledRegistrationScreen';
+
+
 
 
 const bgImage = require('../../../assets/PhotoBG.jpg');
@@ -67,7 +70,11 @@ const RegistrationScreen = ({navigation}) => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <View style={styles.formWrapper}>
               <View style={styles.avatar}>
-                <Image source={addIcon} style={styles.addIcon} />
+                <Image
+                  source={addIcon}
+                  style={styles.addIcon}
+                />
+
               </View>
               <Text style={styles.title}>Регистрация</Text>
               <View style={styles.form}>

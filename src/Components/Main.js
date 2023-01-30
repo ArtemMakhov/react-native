@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Font from 'expo-font';
 import * as SplashScreen from "expo-splash-screen";
 import {
@@ -7,7 +8,6 @@ import {
   View,
 } from "react-native";
 import { useRoute } from '../../router';
-import { useDispatch, useSelector } from 'react-redux';
 import { authStateChangeUser } from '../../redux/auth/authOperations';
 
 SplashScreen.preventAutoHideAsync();

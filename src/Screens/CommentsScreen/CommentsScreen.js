@@ -1,9 +1,10 @@
 import { useState , useEffect} from 'react';
-import { Text,View, StyleSheet,TextInput, TouchableOpacity,FlatList} from 'react-native';
+import { Text,View,TextInput, TouchableOpacity,FlatList} from 'react-native';
 import { useSelector } from 'react-redux';
 import { db } from '../../../firebase/config';
 import { doc, collection, addDoc ,onSnapshot} from "firebase/firestore"; 
-
+import { AntDesign } from '@expo/vector-icons';
+import { styles } from './StyledCommentsScreen';
 
 const CommentsScreen = ({ route }) => {
   const { postId } = route.params;
@@ -13,19 +14,37 @@ const CommentsScreen = ({ route }) => {
 
   useEffect(() => {
     getAllPosts();
-  },[])
+  }, [])
+  
+  const addLeadingZero = (d) => {
+    return (d < 10) ? '0' + d : d;
+  }
+  const months = ['января', 'февраля', 'марта', 'апреля', 'мая',
+    'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+  
+  const getTime = (time = new Date()) => {
+    let day = addLeadingZero(time.getDate());
+    let month = months[time.getMonth()];
+    let year = time.getFullYear();
+    let hour = addLeadingZero(time.getHours());
+    let minutes = addLeadingZero(time.getMinutes());
+
+    return `${day} ${month},${year} | ${hour}:${minutes}`;
+  }
 
   const createPost = async () => {
+    const time = getTime(new Date());
     const Ref = doc(db, 'posts', postId);
-    await addDoc(collection(Ref, 'comments'), { comment, nickname });
+    await addDoc(collection(Ref, 'comments'), { comment, nickname,time });
   };
 
   const getAllPosts = async () => {
-      const Ref = doc(db, 'posts', postId);
-    await onSnapshot(collection(Ref, 'comments'),(data) => setAllComments(
-      data.docs.map((doc) => ({ ...doc.data(), id: doc.id}))
-    ));
-  }
+    const Ref = doc(db, 'posts', postId);
+    await onSnapshot(collection(Ref, 'comments'), (data) =>
+      setAllComments(data.docs.map((doc) =>
+        ({ ...doc.data(), id: doc.id }))
+      ));
+  };
   
   return (
     <View style={styles.container}>
@@ -33,62 +52,33 @@ const CommentsScreen = ({ route }) => {
         data={allComments}
         renderItem={({ item }) =>
           <View>
-            <Text>{item.nickname} </Text>
-            <Text>{item.comment} </Text>
+            <Text style={styles.user}>{item.nickname} </Text>
+            <View style={styles.commentsContainer}>
+              <Text style={styles.commentText}>{item.comment} </Text>
+              <View style={{ alignItems: 'flex-end' }}>
+                <Text style={styles.timeText}>{item.time}</Text>
+              </View>
+            </View>
           </View>}
         keyExtractor={(item, index) => item.id}
       />
       <View>
         <TextInput style={styles.input}
-          placeholder='Comment'
+          placeholder='Комментировать...'
           onChangeText={setComment}
         />
+        <TouchableOpacity
+          style={styles.publicateBtn}
+          activeOpacity={0.8}
+          onPress={createPost}
+        >
+          <AntDesign name="arrowup" size={18} color="#FFFFFF" />
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={styles.publicateBtn}
-        activeOpacity={0.8}
-        onPress={createPost}
-      >
-        <Text style={styles.publicateBtnText}>Опубликовать</Text>
-      </TouchableOpacity>
+
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderTopWidth: 1,
-    borderTopColor: '#E5E5E5',
-  },
-  input: {
-    fontFamily: 'Roboto-Regular',
-    fontSize: 16,
-    height: 50,
-    color: "#BDBDBD",
-    borderBottomWidth: 1,
-    borderColor: "#E8E8E8",
-    marginHorizontal: 16,
-    padding: 15,
-    marginBottom: 16,
-  },
-    publicateBtn: {
-    backgroundColor: "#FF6C00",
-    padding: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 16,
-    borderRadius: 100,
-    marginTop: 20,
-  },
-  publicateBtnText: {
-    fontFamily: 'Roboto-Regular',
-    fontSize: 16,
-    color: "#ffffff",
-  },
-});
 
 export default CommentsScreen;

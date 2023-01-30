@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { View, Text, StyleSheet,FlatList,Image} from 'react-native';
+import { View, Text,FlatList,Image} from 'react-native';
 
 import { db } from '../../../firebase/config';
-import { onSnapshot ,collection} from "firebase/firestore";
+import { onSnapshot, collection } from "firebase/firestore";
 
-const DefaultPostsScreen = ({ route, navigation }) => {
+import { styles } from './StyledDefaultPostsScreen';
+
+const DefaultPostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
-
+  const { nickname, email } = useSelector((state) => state.auth);
+  
   const getAllPosts = async () => {
     onSnapshot(collection(db, 'posts'), (data) => setPosts(
       data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
@@ -20,12 +24,23 @@ const DefaultPostsScreen = ({ route, navigation }) => {
  
   return (
     <View style={styles.container}>
+      <View style={styles.wrapper}>
+        <View style={styles.avatar}>
+        </View>
+        <View style={{marginTop: 32}}>
+          <Text style={styles.text}>{nickname}</Text>
+          <Text style={styles.text}>{email}</Text>
+        </View>
+      </View>
+
       <FlatList data={posts}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
+          
           <View style={{ marginTop: 32 }}>
+                     
             <Image source={{ uri: item.photo }}
-              style={{ marginHorizontal: 10, height: 200 }} />
+              style={styles.photo} />
             <Text style={styles.titlePhoto}>{item.title}</Text>
             <View style={{ alignItems: 'flex-end' }}>
               <FontAwesome5
@@ -33,14 +48,14 @@ const DefaultPostsScreen = ({ route, navigation }) => {
                 name="comment"
                 size={24}
                 color="#BDBDBD"
-                onPress={() => navigation.navigate('Comments',{postId: item.id})}
+                onPress={() => navigation.navigate('Comments', { postId: item.id })}
               />
               <FontAwesome5
                 style={styles.markerIcon}
                 name="map-marker-alt"
                 size={24}
                 color="#BDBDBD"
-                onPress={() => navigation.navigate('Map',{location: item.location})}
+                onPress={() => navigation.navigate('Map', { location: item.location })}
               />
               <Text style={styles.locationText}></Text>
             </View>
@@ -52,39 +67,5 @@ const DefaultPostsScreen = ({ route, navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
-    borderTopWidth: 1,
-    borderTopColor: '#E5E5E5',
-  },
-  titlePhoto: {
-    fontFamily: 'Roboto-Bold',
-    fontSize: 16,
-    color: "#212121",
-    marginHorizontal: 16,
-    marginTop: 8,
-    alignItems: 'center',
-  },
-  locationText: {
-    fontFamily: 'Roboto-Bold',
-    fontSize: 18,
-    color: "#212121",
-    marginHorizontal: 16,
-    marginTop: 8,
-  },
-    markerIcon: {
-    position: 'absolute',
-    top:8,
-    left: 150,
-  },
-  commentsIcon: {
-    position: 'absolute',
-    top: 8,
-    left: 20,
-    }
-})
 
 export default DefaultPostsScreen;

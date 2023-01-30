@@ -9,10 +9,9 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
-  Button
 } from 'react-native';
-import { styles } from './StyledLoginScreen';
 import { useDispatch } from 'react-redux';
+import { styles } from './StyledLoginScreen';
 import { authSignInUser} from '../../../redux/auth/authOperations';
 
 const bgImage = require('../../../assets/PhotoBG.jpg');

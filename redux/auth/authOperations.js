@@ -31,15 +31,14 @@ export const authSignUpUser = ({ email, password, nickname }) => async (dispatch
   }
 };
 
-export  const authSignInUser = ({email,password}) => async (dispatch, getState) => {
-try {
-  const user =  await signInWithEmailAndPassword (auth, email, password)
-  console.log(user);
-} catch (error) {
-        console.log('errorCode', error.code);
-      console.log('errorMessage', error.message);
-}
-}
+export const authSignInUser = ({ email, password }) => async (dispatch, getState) => {
+  try {
+    await signInWithEmailAndPassword(auth, email, password)
+  } catch (error) {
+    console.log('errorCode', error.code);
+    console.log('errorMessage', error.message);
+  }
+};
 
 export  const authSignOutUser = () => async (dispatch, getState) => {
   await signOut(auth);
@@ -49,11 +48,11 @@ export  const authSignOutUser = () => async (dispatch, getState) => {
 
 export  const authStateChangeUser = () => async (dispatch, getState) => {
   await onAuthStateChanged(auth, (user) => {
-   
     if (user) {
       const userUpdateProfile = {
         userId: user.uid,
         nickname: user.displayName,
+        email: user.email,
       }
       
       dispatch(authStateChange({ stateChange: true }));

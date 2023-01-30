@@ -1,6 +1,8 @@
+import { useDispatch } from 'react-redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from "@expo/vector-icons";
 
+import { authSignOutUser } from '../../redux/auth/authOperations';
 import PostsScreen from './PostsScreen/PostsScreen';
 import CreatePostsScreen from './CreatePostsScreen/CreatePostsScreen';
 import ProfileScreen from './ProfileScreen/ProfileScreen';
@@ -8,6 +10,12 @@ import ProfileScreen from './ProfileScreen/ProfileScreen';
 const Tab = createBottomTabNavigator();
 
 export default function Home() {
+  const dispatch = useDispatch();
+    
+  const signOut = () => {
+    dispatch(authSignOutUser());
+  }
+
   return (
     <Tab.Navigator screenOptions={({ route }) => ({
       tabBarShowLabel: false,
@@ -23,7 +31,13 @@ export default function Home() {
           title: 'Публикации',
           headerTitleAlign: 'center',
           headerRight: () => (
-            <Feather name='log-out' size={24} color='#BDBDBD' style={{ marginRight: 16 }} />
+            <Feather
+              name='log-out'
+              size={24}
+              color='#BDBDBD'
+              style={{ marginRight: 16 }}
+              onPress={signOut}
+            />
           ),
           tabBarIcon: ({ focused, size, color }) => (
             <Feather name="grid" size={size} color={color} />
@@ -42,11 +56,7 @@ export default function Home() {
         }} />
       <Tab.Screen name="Profile" component={ProfileScreen}
         options={{
-          title: 'Профиль',
-          headerTitleAlign: 'center',
-          headerLeft: () => (
-            <Feather name="arrow-left" size={24} color="#BDBDBD" style={{ marginLeft: 16 }} />
-          ),
+         headerShown: false,
           tabBarIcon: ({ focused, size, color }) => (
             <Feather name="user" size={size} color={color} />
           )
