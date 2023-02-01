@@ -13,7 +13,8 @@ import {
   Keyboard,
   KeyboardAvoidingView
 } from 'react-native';
-import { Camera  } from 'expo-camera';
+import { Camera } from 'expo-camera';
+import * as MediaLibrary from 'expo-media-library';
 import * as Location from 'expo-location';
 import { storage ,db} from '../../../firebase/config';
 import {
@@ -30,6 +31,8 @@ const CreatePostsScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState(null);
   const [title, setTitle] = useState('');
   const [location, setLocation] = useState(null);
+  const [region, setRegion] = useState(null);
+  const [country, setCountry] = useState(null);
 
   const { userId, nickname} = useSelector((state) => state.auth);
 
@@ -38,19 +41,26 @@ const CreatePostsScreen = ({ navigation }) => {
     Keyboard.dismiss();
   }
 
-    useEffect(() => {
+  useEffect(() => {
     (async () => {
+
+      MediaLibrary.requestPermissionsAsync();
       let { status } = await Location.requestBackgroundPermissionsAsync();
+        
       if (status !== "granted") {
         console.log("Permission to access location was denied");
       }
       let location = await Location.getCurrentPositionAsync({});
+      let address = await Location.reverseGeocodeAsync(location.coords);
+
+      setRegion(address[0].region);
+      setCountry(address[0].country);
       setLocation(location);
     })();
-    }, []);
+  }, []);
   
   const takePhoto = async () => {
-    const {uri} = await camera.takePictureAsync();
+    const { uri } = await camera.takePictureAsync();
     setPhoto(uri);  
   };
 
@@ -70,6 +80,8 @@ const CreatePostsScreen = ({ navigation }) => {
         photo,
         title,
         location: location.coords,
+        region,
+        country,
         userId,
         nickname
       }); 
@@ -97,7 +109,9 @@ const CreatePostsScreen = ({ navigation }) => {
         marginBottom: isShowKeyboard ? 80 : 0
       }}>
         <KeyboardAvoidingView>
-          <Camera style={styles.camera} ref={setCamera}
+          <Camera
+            style={styles.camera}
+            ref={setCamera}
           >
             {photo && <View style={styles.photoContainer}>
               <Image source={{ uri: photo }} style={{ height: 240, borderRadius: 10 }} />
@@ -117,8 +131,8 @@ const CreatePostsScreen = ({ navigation }) => {
               onChangeText={setTitle}
             />
             <TextInput style={{ ...styles.input, paddingLeft: 30 }} placeholder='Местность...'
-              value={location}
-              onChangeText={setLocation}
+              value={region}
+              onChangeText={setRegion}
             />
             <FontAwesome5 style={styles.markerIcon} name="map-marker-alt" size={24} color="#BDBDBD" />
           </View>

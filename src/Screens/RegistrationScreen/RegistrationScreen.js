@@ -11,6 +11,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
+  Button
 } from 'react-native';
 
 import { authSignUpUser} from '../../../redux/auth/authOperations';
@@ -59,6 +60,10 @@ const RegistrationScreen = ({navigation}) => {
     setIsInputFocused(false);
   };
 
+  // const handleClick = () => {
+    
+  // }
+
   return (
     <ImageBackground source={bgImage} style={styles.image}>
       <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -74,8 +79,10 @@ const RegistrationScreen = ({navigation}) => {
                   source={addIcon}
                   style={styles.addIcon}
                 />
-
+                {/* <Image source={bgImage} style={ styles.avatarImg} />
+<Button onPress={handleClick} title='upload'/> */}
               </View>
+
               <Text style={styles.title}>Регистрация</Text>
               <View style={styles.form}>
                 <TextInput

@@ -8,6 +8,7 @@ import { onSnapshot, collection } from "firebase/firestore";
 
 import { styles } from './StyledDefaultPostsScreen';
 
+
 const DefaultPostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
   const { nickname, email } = useSelector((state) => state.auth);
@@ -27,7 +28,7 @@ const DefaultPostsScreen = ({ navigation }) => {
       <View style={styles.wrapper}>
         <View style={styles.avatar}>
         </View>
-        <View style={{marginTop: 32}}>
+        <View style={{ marginTop: 32 }}>
           <Text style={styles.text}>{nickname}</Text>
           <Text style={styles.text}>{email}</Text>
         </View>
@@ -42,22 +43,22 @@ const DefaultPostsScreen = ({ navigation }) => {
             <Image source={{ uri: item.photo }}
               style={styles.photo} />
             <Text style={styles.titlePhoto}>{item.title}</Text>
-            <View style={{ alignItems: 'flex-end' }}>
+            <View style={styles.iconsContainer}>
               <FontAwesome5
                 style={styles.commentsIcon}
                 name="comment"
                 size={24}
-                color="#BDBDBD"
                 onPress={() => navigation.navigate('Comments', { postId: item.id })}
               />
-              <FontAwesome5
-                style={styles.markerIcon}
-                name="map-marker-alt"
-                size={24}
-                color="#BDBDBD"
-                onPress={() => navigation.navigate('Map', { location: item.location })}
-              />
-              <Text style={styles.locationText}></Text>
+              <View style={{ flexDirection: 'row' }}>
+                <FontAwesome5
+                  style={styles.markerIcon}
+                  name="map-marker-alt"
+                  size={24}
+                  onPress={() => navigation.navigate('Map', { location: item.location })}
+                />
+                <Text style={styles.locationText}>{item.region}, {item.country}</Text>
+              </View>
             </View>
             
           </View>

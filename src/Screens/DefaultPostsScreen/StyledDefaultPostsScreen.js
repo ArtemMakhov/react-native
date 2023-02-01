@@ -34,18 +34,21 @@ export const styles = StyleSheet.create({
     fontFamily: 'Roboto-Bold',
     fontSize: 18,
     color: "#212121",
-    marginHorizontal: 16,
+    marginRight: 16,
+    marginLeft: 4,
+    textDecorationLine: 'underline',
+  },
+  iconsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: 8,
   },
   markerIcon: {
-    position: 'absolute',
-    top: 8,
-    right: 30,
+    color: "#BDBDBD",
   },
   commentsIcon: {
-    position: 'absolute',
-    top: 8,
-    left: 20,
+    color: "#BDBDBD",
+    marginLeft: 16,
   },
   wrapper: {
     display: 'flex',

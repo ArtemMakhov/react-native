@@ -1,8 +1,8 @@
 import { useState , useEffect} from 'react';
-import { Text,View,TextInput, TouchableOpacity,FlatList} from 'react-native';
+import { Text,View,TextInput, TouchableOpacity,FlatList,Image} from 'react-native';
 import { useSelector } from 'react-redux';
 import { db } from '../../../firebase/config';
-import { doc, collection, addDoc ,onSnapshot} from "firebase/firestore"; 
+import { doc, collection, addDoc ,onSnapshot, getDoc } from "firebase/firestore"; 
 import { AntDesign } from '@expo/vector-icons';
 import { styles } from './StyledCommentsScreen';
 
@@ -10,10 +10,12 @@ const CommentsScreen = ({ route }) => {
   const { postId } = route.params;
   const [comment, setComment] = useState('');
   const [allComments, setAllComments] = useState(null);
+  const [photo, setPhoto] = useState(null);
   const { nickname } = useSelector((state) => state.auth);
 
   useEffect(() => {
     getAllPosts();
+    getPost();
   }, [])
   
   const addLeadingZero = (d) => {
@@ -45,13 +47,23 @@ const CommentsScreen = ({ route }) => {
         ({ ...doc.data(), id: doc.id }))
       ));
   };
+
+  const getPost = async () => {
+    const docRef = doc(db, 'posts', postId);
+    const docSnap = await getDoc(docRef);
+  
+    setPhoto(docSnap.data().photo);
+  }
   
   return (
     <View style={styles.container}>
+             <View style={{ marginTop: 18 }}>          
+            <Image source={{ uri: photo }} style={styles.photo} />
+          </View>
       <FlatList
         data={allComments}
         renderItem={({ item }) =>
-          <View>
+          <View style={{marginTop: 24}}>
             <Text style={styles.user}>{item.nickname} </Text>
             <View style={styles.commentsContainer}>
               <Text style={styles.commentText}>{item.comment} </Text>

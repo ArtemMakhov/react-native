@@ -55,28 +55,33 @@ export const styles = StyleSheet.create({
     marginTop: 8,
     alignItems: 'center',
   },
+  locationText: {
+    fontFamily: 'Roboto-Regular',
+    fontSize: 16,
+    color: "#212121",
+    textDecorationLine: 'underline',
+  },
+  iconsContainer: {
+    justifyContent: 'space-between',
+    marginTop: 8,
+    marginBottom: 32,
+    flexDirection: 'row',
+  },
   markerIcon: {
-    position: 'absolute',
-    top: 8,
-    right: 20,
-    color:'#BDBDBD',
+    marginRight: 4,
+    color: '#BDBDBD',
   },
   commentsIcon: {
-    position: 'absolute',
-    top: 8,
-    left: 8,
-    color:'#FF6C00',
+    color: '#FF6C00',
   },
   likeIcon: {
-    position: 'absolute',
-    top: 8,
-    left: 64,
-    color:"#FF6C00",
+    color: "#FF6C00",
+    marginLeft: 24,
   },
   logoutIcon: {
     position: 'absolute',
     top: 22,
     right: 16,
-    color:'#BDBDBD',
+    color: '#BDBDBD',
   }
 });

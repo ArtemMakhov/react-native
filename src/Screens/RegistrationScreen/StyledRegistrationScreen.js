@@ -85,5 +85,14 @@ export const styles = StyleSheet.create({
   container: {
      flex: 1,
     justifyContent: 'flex-end'
+  },
+  avatarImg: {
+    verticalAlign: 'middle',
+    width: 80,
+    height: 80,
+    borderRadius: 50,
+    borderWidth: 5,
+    borderColor: 'tomato',
+    borderStyle: 'outset',
   }
 })

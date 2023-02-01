@@ -16,11 +16,10 @@ const ProfileScreen = ({navigation}) => {
   
   const getUserPosts = async () => {
     const postsRef = collection(db, 'posts');
-
     const q = await query(postsRef, where('userId', '==', userId));
     
     await onSnapshot(q, (data) =>
-      setUserPosts(data.docs.map((doc) => ({ ...doc.data() }))
+      setUserPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       ));
   };
 
@@ -28,8 +27,6 @@ const ProfileScreen = ({navigation}) => {
     getUserPosts();
   }, []);
 
-
- 
   const signOut = () => {
     dispatch(authSignOutUser());
   }
@@ -53,32 +50,40 @@ const ProfileScreen = ({navigation}) => {
               <Image source={{ uri: item.photo }}
                 style={styles.photo} />
               <Text style={styles.titlePhoto}>{item.title}</Text>
-              <View style={{ alignItems: 'flex-end', marginBottom: 32 }}>
-                <FontAwesome5
-                  style={styles.commentsIcon}
-                  name="comment"
-                  size={24}
-                  onPress={() => navigation.navigate('Comments', { postId: item.id })}
-                />
-                <AntDesign
-                  style={styles.likeIcon}
-                  name="like2"
-                  size={24}
+              <View style={styles.iconsContainer}>
+                <View style={{ flexDirection: 'row' }}>
+                  <FontAwesome5
+                    style={styles.commentsIcon}
+                    name="comment"
+                    size={24}
+                    onPress={() => navigation.navigate('Comments', { postId: item.id })}
                   />
-                <FontAwesome5
-                  style={styles.markerIcon}
-                  name="map-marker-alt"
-                  size={24}
-                  onPress={() => navigation.navigate('Map', { location: item.location })}
-                />
-                <Text style={styles.locationText}></Text>
+                  <AntDesign
+                    style={styles.likeIcon}
+                    name="like2"
+                    size={24}
+                  />
+                </View>
+                <View style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                }}>
+                  <FontAwesome5
+                    style={styles.markerIcon}
+                    name="map-marker-alt"
+                    size={24}
+                    onPress={() => navigation.navigate('Map', { location: item.location })}
+                  />
+                  <Text style={styles.locationText}>{item.country}</Text>
+                </View>
+
               </View>
             </View>
           )}
         />
       </View>
     </ImageBackground>
-  )
+  );
 };
 
 

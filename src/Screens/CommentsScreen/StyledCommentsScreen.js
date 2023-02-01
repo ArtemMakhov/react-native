@@ -55,6 +55,10 @@ export const styles = StyleSheet.create({
     fontFamily: 'Roboto-Regular',
     fontSize: 10,
     color: '#BDBDBD',
-
-  }
+  },
+    photo: {
+    marginHorizontal: 10,
+    height: 200,
+    borderRadius: 8,
+  },
 });
