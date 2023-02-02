@@ -11,7 +11,7 @@ const CommentsScreen = ({ route }) => {
   const [comment, setComment] = useState('');
   const [allComments, setAllComments] = useState(null);
   const [photo, setPhoto] = useState(null);
-  const { nickname } = useSelector((state) => state.auth);
+  const { nickname , avatar} = useSelector((state) => state.auth);
 
   useEffect(() => {
     getAllPosts();
@@ -37,7 +37,7 @@ const CommentsScreen = ({ route }) => {
   const createPost = async () => {
     const time = getTime(new Date());
     const Ref = doc(db, 'posts', postId);
-    await addDoc(collection(Ref, 'comments'), { comment, nickname,time });
+    await addDoc(collection(Ref, 'comments'), { comment, nickname,avatar,time });
   };
 
   const getAllPosts = async () => {
@@ -57,14 +57,14 @@ const CommentsScreen = ({ route }) => {
   
   return (
     <View style={styles.container}>
-             <View style={{ marginTop: 18 }}>          
-            <Image source={{ uri: photo }} style={styles.photo} />
-          </View>
+      <View style={{ marginTop: 18 }}>
+        <Image source={{ uri: photo }} style={styles.photo} />
+      </View>
       <FlatList
         data={allComments}
         renderItem={({ item }) =>
-          <View style={{marginTop: 24}}>
-            <Text style={styles.user}>{item.nickname} </Text>
+          <View style={{ marginTop: 24 }}>
+            <Image source={{ uri: item.avatar }} style={styles.avatar} />     
             <View style={styles.commentsContainer}>
               <Text style={styles.commentText}>{item.comment} </Text>
               <View style={{ alignItems: 'flex-end' }}>

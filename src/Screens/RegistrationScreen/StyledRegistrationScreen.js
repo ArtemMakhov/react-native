@@ -16,7 +16,8 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     position: 'relative',
   },
-  avatar: {   height: 120,
+  avatar: {
+    height: 120,
     width: 120,
     backgroundColor: "#F6F6F6",
     borderRadius: 16,
@@ -24,12 +25,18 @@ export const styles = StyleSheet.create({
     top: -60,
     alignSelf: "center",
   },
+  avatarImg: {
+    height: 120,
+    width: 120,
+    borderRadius: 16,
+  },
   addIcon: {
     width: 25,
     height: 25,
     position: "absolute",
     bottom: 14,
     right: -12.5,
+    zIndex: 233
   },
   title: {
     fontFamily: 'Roboto-Medium',
@@ -80,19 +87,11 @@ export const styles = StyleSheet.create({
     fontFamily: 'Roboto-Regular',
     fontSize: 16,
     marginTop: 16,
-    color:"#1B4371",
+    color: "#1B4371",
   },
   container: {
-     flex: 1,
+    flex: 1,
     justifyContent: 'flex-end'
   },
-  avatarImg: {
-    verticalAlign: 'middle',
-    width: 80,
-    height: 80,
-    borderRadius: 50,
-    borderWidth: 5,
-    borderColor: 'tomato',
-    borderStyle: 'outset',
-  }
-})
+
+});

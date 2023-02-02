@@ -12,8 +12,8 @@ const bgImage = require('../../../assets/PhotoBG.jpg');
 const ProfileScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const [userPosts, setUserPosts] = useState([]);
-  const { userId, nickname } = useSelector((state) => state.auth);
-  
+  const { userId, nickname, avatar } = useSelector((state) => state.auth);
+
   const getUserPosts = async () => {
     const postsRef = collection(db, 'posts');
     const q = await query(postsRef, where('userId', '==', userId));
@@ -41,6 +41,7 @@ const ProfileScreen = ({navigation}) => {
           onPress={signOut}
         />
         <View style={styles.avatar}>
+          <Image source={{uri: avatar}} style={ styles.avatarImg} />
         </View>
         <Text style={styles.name}>{nickname}</Text>
         <FlatList data={userPosts}

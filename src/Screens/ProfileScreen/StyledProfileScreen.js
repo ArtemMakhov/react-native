@@ -35,6 +35,11 @@ export const styles = StyleSheet.create({
     top: -60,
     alignSelf: "center",
   },
+    avatarImg: {
+    height: 120,
+    width: 120,
+    borderRadius: 16,
+  },
   name: {
     fontFamily: 'Roboto-Bold',
     fontSize: 20,

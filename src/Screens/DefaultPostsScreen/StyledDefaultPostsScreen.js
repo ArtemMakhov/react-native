@@ -17,6 +17,11 @@ export const styles = StyleSheet.create({
     marginTop: 32,
     marginRight: 8,
   },
+  avatarImg: {
+    height: 60,
+    width: 60,
+    borderRadius: 16,
+  },
   photo: {
     marginHorizontal: 10,
     height: 200,

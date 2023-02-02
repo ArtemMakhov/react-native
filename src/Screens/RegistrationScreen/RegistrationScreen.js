@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   View,
@@ -13,10 +13,13 @@ import {
   TouchableWithoutFeedback,
   Button
 } from 'react-native';
-
+//
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+//
 import { authSignUpUser} from '../../../redux/auth/authOperations';
 import { styles } from './StyledRegistrationScreen';
 
+import * as ImagePicker from 'expo-image-picker';
 
 
 
@@ -27,6 +30,7 @@ const initialState = {
   nickname: '',
   email: '',
   password: '',
+  avatar: null,
 };
 
 const RegistrationScreen = ({navigation}) => {
@@ -34,6 +38,54 @@ const RegistrationScreen = ({navigation}) => {
   const [passwordIsHidden, setPasswordIsHidden] = useState(true);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [state, setState] = useState(initialState);
+
+  useEffect(() => {
+    (async () => {
+       await ImagePicker.requestMediaLibraryPermissionsAsync();
+    })();
+  }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const uri = result.assets[0];
+      const uploadUrl = await uploadImageAsync(uri.uri)
+
+      setState((prevState) => ({ ...prevState, avatar: uploadUrl }));
+    }
+  };
+
+  //------TODO refactoring function----
+  const uploadImageAsync = async (uri) => {
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log('e', e);
+        reject(new TypeError('Network request failed'))
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+      xhr.send(null);
+    });
+
+    const fileRef = ref(getStorage(), Date.now().toString());
+    await uploadBytes(fileRef, blob);
+
+    blob.close();
+
+    return await getDownloadURL(fileRef);
+  };
+  //--------------------
+ 
 
   const dispatch = useDispatch();
 
@@ -60,9 +112,6 @@ const RegistrationScreen = ({navigation}) => {
     setIsInputFocused(false);
   };
 
-  // const handleClick = () => {
-    
-  // }
 
   return (
     <ImageBackground source={bgImage} style={styles.image}>
@@ -75,14 +124,11 @@ const RegistrationScreen = ({navigation}) => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <View style={styles.formWrapper}>
               <View style={styles.avatar}>
-                <Image
-                  source={addIcon}
-                  style={styles.addIcon}
-                />
-                {/* <Image source={bgImage} style={ styles.avatarImg} />
-<Button onPress={handleClick} title='upload'/> */}
+                <TouchableOpacity style={styles.addIcon} onPress={pickImage}>
+                <Image source={addIcon}/>
+                </TouchableOpacity>
+                 <Image source={{uri:state.avatar}} style={ styles.avatarImg} />
               </View>
-
               <Text style={styles.title}>Регистрация</Text>
               <View style={styles.form}>
                 <TextInput

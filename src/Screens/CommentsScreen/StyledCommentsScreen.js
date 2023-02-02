@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "#FF6C00",
     alignItems: "center",
     justifyContent: "center",
-      width: 34,
+    width: 34,
     height: 34,
     borderRadius: 100,
     marginTop: 20,
@@ -35,6 +35,12 @@ export const styles = StyleSheet.create({
   user: {
     marginLeft: 16,
     fontSize: 23,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+    marginLeft: 16,
   },
   commentsContainer: {
     backgroundColor: '#E5E5E5',
@@ -56,7 +62,7 @@ export const styles = StyleSheet.create({
     fontSize: 10,
     color: '#BDBDBD',
   },
-    photo: {
+  photo: {
     marginHorizontal: 10,
     height: 200,
     borderRadius: 8,

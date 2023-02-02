@@ -10,19 +10,20 @@ import { authSlice } from './authSlice';
 
 const {authStateChange,updateUserProfile,authSignOut } = authSlice.actions;
 
-export const authSignUpUser = ({ email, password, nickname }) => async (dispatch, getState) => {
+export const authSignUpUser = ({ email, password, nickname,avatar}) => async (dispatch, getState) => {
    
   try {
-    await createUserWithEmailAndPassword(auth, email, password);
+    await createUserWithEmailAndPassword(auth, email, password, avatar);
     const user = await auth.currentUser;
   
-    await updateProfile(user, { displayName: nickname });
+    await updateProfile(user, { displayName: nickname, photoURL: avatar });
   
-    const { uid, displayName } = auth.currentUser;
+    const { uid, displayName , photoURL} = auth.currentUser;
   
     dispatch(authSlice.actions.updateUserProfile({
       userId: uid,
       nickname: displayName,
+      avatar: photoURL,
     }));
     
   } catch (error) {
@@ -53,7 +54,8 @@ export  const authStateChangeUser = () => async (dispatch, getState) => {
         userId: user.uid,
         nickname: user.displayName,
         email: user.email,
-      }
+        avatar: user.photoURL,
+      };
       
       dispatch(authStateChange({ stateChange: true }));
       dispatch(updateUserProfile(userUpdateProfile));

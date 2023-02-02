@@ -11,7 +11,7 @@ import { styles } from './StyledDefaultPostsScreen';
 
 const DefaultPostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
-  const { nickname, email } = useSelector((state) => state.auth);
+  const { nickname, email,avatar } = useSelector((state) => state.auth);
   
   const getAllPosts = async () => {
     onSnapshot(collection(db, 'posts'), (data) => setPosts(
@@ -27,6 +27,7 @@ const DefaultPostsScreen = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.wrapper}>
         <View style={styles.avatar}>
+          <Image source={{uri: avatar}} style={ styles.avatarImg} />
         </View>
         <View style={{ marginTop: 32 }}>
           <Text style={styles.text}>{nickname}</Text>
