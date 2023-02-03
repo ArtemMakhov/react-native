@@ -11,17 +11,13 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
-  Button
 } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 //
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 //
 import { authSignUpUser} from '../../../redux/auth/authOperations';
 import { styles } from './StyledRegistrationScreen';
-
-import * as ImagePicker from 'expo-image-picker';
-
-
 
 const bgImage = require('../../../assets/PhotoBG.jpg');
 const addIcon = require('../../../assets/add.png');

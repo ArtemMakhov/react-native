@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "AwesomeProject",
-    "slug": "AwesomeProject",
+    "name": "SocialApp",
+    "slug": "SocialApp",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
