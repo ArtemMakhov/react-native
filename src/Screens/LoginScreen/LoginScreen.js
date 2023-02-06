@@ -10,10 +10,12 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { styles } from './StyledLoginScreen';
 import { authSignInUser} from '../../../redux/auth/authOperations';
-
+import Toast from 'react-native-toast-message';
+import { toastConfig } from '../../Components/Toast';
+import Loader from '../../Components/Loader';
 const bgImage = require('../../../assets/PhotoBG.jpg');
 
 const initialState = {
@@ -27,7 +29,8 @@ const LoginScreen = ({navigation}) => {
   const [passwordIsHidden, setPasswordIsHidden] = useState(true);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [state, setState] = useState(initialState);
-  
+  const { isLoading } = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
 
   const handleSubmit = () => {
@@ -53,8 +56,11 @@ const LoginScreen = ({navigation}) => {
     setIsInputFocused(false);
   };
 
-  return (
+  return isLoading
+    ? (<Loader />)
+    : (
     <ImageBackground source={bgImage} style={styles.image}>
+      <Toast config={toastConfig} />
       <TouchableWithoutFeedback onPress={keyboardHide}>
         <View style={{
           ...styles.container,
@@ -119,8 +125,8 @@ const LoginScreen = ({navigation}) => {
           </KeyboardAvoidingView>
         </View>
       </TouchableWithoutFeedback>
+      
     </ImageBackground>
- 
   );
 }
 

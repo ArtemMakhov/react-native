@@ -7,12 +7,13 @@ import {
   signOut
 } from "firebase/auth";
 import { authSlice } from './authSlice';
-
-const {authStateChange,updateUserProfile,authSignOut } = authSlice.actions;
+import { showToast } from '../../src/Components/Toast';
+const {authStateChange,updateUserProfile,authSignOut,authIsLoading } = authSlice.actions;
 
 export const authSignUpUser = ({ email, password, nickname,avatar}) => async (dispatch, getState) => {
    
   try {
+   dispatch(authIsLoading({isLoading: true}))
     await createUserWithEmailAndPassword(auth, email, password, avatar);
     const user = await auth.currentUser;
   
@@ -27,21 +28,30 @@ export const authSignUpUser = ({ email, password, nickname,avatar}) => async (di
     }));
     
   } catch (error) {
-    console.log('errorCode', error.code);
-    console.log('errorMessage', error.message);
+    dispatch(authIsLoading({ isLoading: false }));
+    
+    showToast('error', 'Error', `${error.code}`);
   }
 };
 
 export const authSignInUser = ({ email, password }) => async (dispatch, getState) => {
   try {
+    dispatch(authIsLoading({isLoading: true}))
     await signInWithEmailAndPassword(auth, email, password)
   } catch (error) {
-    console.log('errorCode', error.code);
-    console.log('errorMessage', error.message);
+    dispatch(authIsLoading({isLoading: false}))
+    if (error.code === 'auth/invalid-email') {
+      showToast('error', 'Error', 'Неверно указан email');
+    } else if (error.code === 'auth/wrong-password') {
+      showToast('error', 'Error', 'Неверный пароль');
+    } else {
+      showToast('error', 'Error', `${error.code}`);
+    }
   }
 };
 
 export  const authSignOutUser = () => async (dispatch, getState) => {
+  dispatch(authIsLoading({isLoading: true}))
   await signOut(auth);
   
   dispatch(authSignOut());
@@ -59,6 +69,7 @@ export  const authStateChangeUser = () => async (dispatch, getState) => {
       
       dispatch(authStateChange({ stateChange: true }));
       dispatch(updateUserProfile(userUpdateProfile));
+      dispatch(authIsLoading({isLoading: false}))
     }
   });
 }

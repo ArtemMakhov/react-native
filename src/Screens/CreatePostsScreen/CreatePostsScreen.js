@@ -85,6 +85,7 @@ const CreatePostsScreen = ({ navigation }) => {
         userId,
         nickname
       }); 
+    setTitle('');
   };
 
   const uploadPhotoToServer = async () => {

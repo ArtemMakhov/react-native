@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { View, Text,FlatList,Image} from 'react-native';
-
+import Loader from '../../Components/Loader';
 import { db } from '../../../firebase/config';
 import { onSnapshot, collection } from "firebase/firestore";
 
@@ -10,13 +10,16 @@ import { styles } from './StyledDefaultPostsScreen';
 
 
 const DefaultPostsScreen = ({ navigation }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [posts, setPosts] = useState([]);
   const { nickname, email,avatar } = useSelector((state) => state.auth);
   
   const getAllPosts = async () => {
-    onSnapshot(collection(db, 'posts'), (data) => setPosts(
+    setIsLoading(true);
+   await onSnapshot(collection(db, 'posts'), (data) => setPosts(
       data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-    ))
+   ))
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -41,8 +44,8 @@ const DefaultPostsScreen = ({ navigation }) => {
           
           <View style={{ marginTop: 32 }}>
                      
-            <Image source={{ uri: item.photo }}
-              style={styles.photo} />
+            {!isLoading ? (<Image source={{ uri: item.photo }}
+              style={styles.photo} />) : (<Loader/>)}
             <Text style={styles.titlePhoto}>{item.title}</Text>
             <View style={styles.iconsContainer}>
               <FontAwesome5

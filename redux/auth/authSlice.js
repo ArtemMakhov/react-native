@@ -6,6 +6,7 @@ const initialState = {
   email: null,
   avatar: null,
   stateChange: false,
+  isLoading: false,
 };
 
 export const authSlice = createSlice({
@@ -23,12 +24,16 @@ export const authSlice = createSlice({
       ...state,
       stateChange: payload.stateChange,
     }),
+    authIsLoading: (state, { payload }) => ({
+      ...state,
+      isLoading: payload.isLoading,
+    }),
     authSignOut: () => initialState,
   }
 });
 
 
 
-// export default authSlice.reducer;
+
 
 

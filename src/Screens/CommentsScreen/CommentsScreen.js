@@ -37,7 +37,7 @@ const CommentsScreen = ({ route }) => {
   const createPost = async () => {
     const time = getTime(new Date());
     const Ref = doc(db, 'posts', postId);
-    await addDoc(collection(Ref, 'comments'), { comment, nickname,avatar,time });
+    await addDoc(collection(Ref, 'comments'), { comment, nickname, avatar, time });
   };
 
   const getAllPosts = async () => {

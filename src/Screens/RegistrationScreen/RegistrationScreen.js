@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   View,
   Text,
@@ -16,7 +16,10 @@ import * as ImagePicker from 'expo-image-picker';
 //
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 //
-import { authSignUpUser} from '../../../redux/auth/authOperations';
+import { authSignUpUser } from '../../../redux/auth/authOperations';
+import Loader from '../../Components/Loader';
+import Toast from 'react-native-toast-message';
+import { toastConfig } from '../../Components/Toast';
 import { styles } from './StyledRegistrationScreen';
 
 const bgImage = require('../../../assets/PhotoBG.jpg');
@@ -34,6 +37,7 @@ const RegistrationScreen = ({navigation}) => {
   const [passwordIsHidden, setPasswordIsHidden] = useState(true);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [state, setState] = useState(initialState);
+  const { isLoading } = useSelector((state) => state.auth);
 
   useEffect(() => {
     (async () => {
@@ -109,8 +113,11 @@ const RegistrationScreen = ({navigation}) => {
   };
 
 
-  return (
+  return isLoading
+    ? (<Loader />)
+    : (
     <ImageBackground source={bgImage} style={styles.image}>
+      <Toast config={toastConfig}/>
       <TouchableWithoutFeedback onPress={keyboardHide}>
         <View style={{
           ...styles.container,
