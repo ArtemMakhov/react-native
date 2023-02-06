@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -13,7 +13,7 @@ import {
   Keyboard,
   KeyboardAvoidingView
 } from 'react-native';
-import { Camera } from 'expo-camera';
+import { Camera, CameraType } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import * as Location from 'expo-location';
 import { storage ,db} from '../../../firebase/config';
@@ -26,6 +26,9 @@ import { collection, addDoc } from "firebase/firestore";
 import { styles } from './StyledCreatePostsScreen';
 
 const CreatePostsScreen = ({ navigation }) => {
+  const [type, setType] = useState(CameraType.back);
+  const [permission, setPermission] = Camera.useCameraPermissions();
+  const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
@@ -33,6 +36,7 @@ const CreatePostsScreen = ({ navigation }) => {
   const [location, setLocation] = useState(null);
   const [region, setRegion] = useState(null);
   const [country, setCountry] = useState(null);
+  const cameraRef = useRef(null);
 
   const { userId, nickname} = useSelector((state) => state.auth);
 
@@ -45,6 +49,8 @@ const CreatePostsScreen = ({ navigation }) => {
     (async () => {
 
       MediaLibrary.requestPermissionsAsync();
+      const cameraStatus = await Camera.requestCameraPermissionsAsync();
+      setHasCameraPermission(cameraStatus.status === 'granted');
       let { status } = await Location.requestBackgroundPermissionsAsync();
         
       if (status !== "granted") {
@@ -60,8 +66,17 @@ const CreatePostsScreen = ({ navigation }) => {
   }, []);
   
   const takePhoto = async () => {
-    const { uri } = await camera.takePictureAsync();
-    setPhoto(uri);  
+    // const { uri } = await camera.takePictureAsync();
+    // setPhoto(uri);  
+    if (cameraRef) {
+      try {
+        const { uri } = await cameraRef.current.takePictureAsync();
+        console.log('uri', uri);
+        setPhoto(uri);
+      } catch (e) {
+        console.log('error', e)
+      }
+    }
   };
 
     const handleOnFocus = () => {
@@ -112,7 +127,8 @@ const CreatePostsScreen = ({ navigation }) => {
         <KeyboardAvoidingView>
           <Camera
             style={styles.camera}
-            ref={setCamera}
+            type={type}
+            ref={cameraRef}
           >
             {photo && <View style={styles.photoContainer}>
               <Image source={{ uri: photo }} style={{ height: 240, borderRadius: 10 }} />

@@ -18,7 +18,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.artemmakhov.SocialApp"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,10 +30,16 @@
         "CAMERA",
         "ACCESS_FINE_LOCATION",
         "ACCESS_BACKGROUND_LOCATION"
-      ]
+      ],
+      "package": "com.artemmakhov.SocialApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5bfa881d-4a23-4ed5-b706-8f8a0774a452"
+      }
     }
   }
 }
