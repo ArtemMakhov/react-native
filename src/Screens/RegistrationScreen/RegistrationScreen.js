@@ -121,7 +121,7 @@ const RegistrationScreen = ({navigation}) => {
       <TouchableWithoutFeedback onPress={keyboardHide}>
         <View style={{
           ...styles.container,
-          marginBottom: isShowKeyboard ? 40 : 0
+          marginBottom: isShowKeyboard ? 60 : 0
         }}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>

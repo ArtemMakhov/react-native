@@ -64,7 +64,7 @@ const LoginScreen = ({navigation}) => {
       <TouchableWithoutFeedback onPress={keyboardHide}>
         <View style={{
           ...styles.container,
-          marginBottom: isShowKeyboard ? 10 : 0
+          marginBottom: isShowKeyboard ? 40: 0
         }}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
