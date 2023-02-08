@@ -30,7 +30,6 @@ const CreatePostsScreen = ({ navigation }) => {
   const [permission, setPermission] = Camera.useCameraPermissions();
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [title, setTitle] = useState('');
   const [location, setLocation] = useState(null);
@@ -51,11 +50,13 @@ const CreatePostsScreen = ({ navigation }) => {
       MediaLibrary.requestPermissionsAsync();
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
       setHasCameraPermission(cameraStatus.status === 'granted');
-      let { status } = await Location.requestBackgroundPermissionsAsync();
+
+      let { status } = await Location.requestForegroundPermissionsAsync();
         
       if (status !== "granted") {
         console.log("Permission to access location was denied");
       }
+      
       let location = await Location.getCurrentPositionAsync({});
       let address = await Location.reverseGeocodeAsync(location.coords);
 
@@ -65,13 +66,10 @@ const CreatePostsScreen = ({ navigation }) => {
     })();
   }, []);
   
-  const takePhoto = async () => {
-    // const { uri } = await camera.takePictureAsync();
-    // setPhoto(uri);  
+  const takePhoto = async () => { 
     if (cameraRef) {
       try {
         const { uri } = await cameraRef.current.takePictureAsync();
-        console.log('uri', uri);
         setPhoto(uri);
       } catch (e) {
         console.log('error', e)
